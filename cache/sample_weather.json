@@ -1,0 +1,86 @@
+[
+  {
+    "icaoId": "KBWI",
+    "receiptTime": "2026-10-26T21:58:07.465Z",
+    "obsTime": 1793051640,
+    "reportTime": "2026-10-26T22:00:00.000Z",
+    "temp": 18.3,
+    "dewp": 7.2,
+    "wdir": 250,
+    "wspd": 4,
+    "visib": "10+",
+    "altim": 1022.8,
+    "slp": 1022.7,
+    "qcField": 4,
+    "metarType": "METAR",
+    "rawOb": "METAR KBWI 262154Z 25004KT 10SM FEW250 18/07 A3020 RMK AO2 SLP227 T01830072",
+    "lat": 39.1733,
+    "lon": -76.684,
+    "elev": 42,
+    "name": "Baltimore-Washington Intl, MD, US",
+    "cover": "FEW",
+    "clouds": [
+      {
+        "cover": "FEW",
+        "base": 25000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KDCA",
+    "receiptTime": "2026-10-26T21:56:37.506Z",
+    "obsTime": 1793051520,
+    "reportTime": "2026-10-26T22:00:00.000Z",
+    "temp": 21.1,
+    "dewp": 6.1,
+    "wdir": 270,
+    "wspd": 6,
+    "visib": "10+",
+    "altim": 1023.1,
+    "slp": 1023.1,
+    "qcField": 4,
+    "metarType": "METAR",
+    "rawOb": "METAR KDCA 262152Z 27006KT 10SM FEW250 21/06 A3021 RMK AO2 SLP231 T02110061",
+    "lat": 38.8472,
+    "lon": -77.0345,
+    "elev": 4,
+    "name": "Washington/Reagan-National Arpt, VA, US",
+    "cover": "FEW",
+    "clouds": [
+      {
+        "cover": "FEW",
+        "base": 25000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KIAD",
+    "receiptTime": "2026-10-26T21:56:37.546Z",
+    "obsTime": 1793051520,
+    "reportTime": "2026-10-26T22:00:00.000Z",
+    "temp": 20,
+    "dewp": 7.8,
+    "wdir": 240,
+    "wspd": 3,
+    "visib": "10+",
+    "altim": 1023.5,
+    "slp": 1023.4,
+    "qcField": 4,
+    "metarType": "METAR",
+    "rawOb": "METAR KIAD 262152Z 24003KT 10SM FEW250 20/08 A3022 RMK AO2 SLP234 T02000078",
+    "lat": 38.9348,
+    "lon": -77.4473,
+    "elev": 90,
+    "name": "Washington/Dulles Intl, VA, US",
+    "cover": "FEW",
+    "clouds": [
+      {
+        "cover": "FEW",
+        "base": 25000
+      }
+    ],
+    "fltCat": "VFR"
+  }
+]
