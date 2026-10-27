@@ -51,70 +51,60 @@ def normalize_weather(raw_data):
 #part 5: processing functions
 
 
+
+
+
 def count_airborne_aircraft(aircraft):
-    pass
+    return sum(1 for a in aircraft if a["on_ground"] is False)
+
 
 def count_ground_aircraft(aircraft):
-    pass
+    return sum(1 for a in aircraft if a["on_ground"] is True)
+
 
 def find_fastest_aircraft(aircraft):
-    pass
+    with_speed = [a for a in aircraft if a["velocity_mps"] is not None]
+    if not with_speed:
+        return None
+    return max(with_speed, key=lambda a: a["velocity_mps"])
+
 
 def find_highest_aircraft(aircraft):
-    pass
+    with_altitude = [a for a in aircraft if a["altitude_meters"] is not None]
+    if not with_altitude:
+        return None
+    return max(with_altitude, key=lambda a: a["altitude_meters"])
+
 
 def find_aircraft_missing_positions(aircraft):
-    pass
+    return [
+        a for a in aircraft
+        if a["latitude"] is None or a["longitude"] is None
+    ]
+
+
+
+
+'''
+VFR	Visual Flight Rules	--- Clear weather
+MVFR	Marginal VFR  ----	Fair weather
+IFR	Instrument Flight Rules	--- Poor weather
+LIFR	Low IFR	--- Very bad weather
+
+'''
 
 def classify_weather_risk(weather):
-    pass
 
-
-
-
-
-# def count_airborne_aircraft(aircraft):
-#     return sum(1 for a in aircraft if a["on_ground"] is False)
-
-
-# def count_ground_aircraft(aircraft):
-#     return sum(1 for a in aircraft if a["on_ground"] is True)
-
-
-# def find_fastest_aircraft(aircraft):
-#     with_speed = [a for a in aircraft if a["velocity_mps"] is not None]
-#     if not with_speed:
-#         return None
-#     return max(with_speed, key=lambda a: a["velocity_mps"])
-
-
-# def find_highest_aircraft(aircraft):
-#     with_altitude = [a for a in aircraft if a["altitude_meters"] is not None]
-#     if not with_altitude:
-#         return None
-#     return max(with_altitude, key=lambda a: a["altitude_meters"])
-
-
-# def find_aircraft_missing_positions(aircraft):
-#     return [
-#         a for a in aircraft
-#         if a["latitude"] is None or a["longitude"] is None
-#     ]
-
-
-
-# def classify_weather_risk(weather):
-#     """Return a risk level for each airport observation."""
-#     results = []
-#     for obs in weather:
-#         category = obs.get("flight_category")
-#         if category == "VFR":
-#             risk = "low"
-#         elif category == "MVFR":
-#             risk = "moderate"
-#         elif category in ("IFR", "LIFR"):
-#             risk = "high"
-#         else:
-#             risk = "unknown"
-#         results.append({"airport": obs.get("airport"), "risk": risk})
-#     return results
+    results = []
+    for obs in weather:
+        category = obs.get("flight_category")
+        if category == "VFR":
+            risk = "low"
+        elif category == "MVFR":
+            risk = "moderate"
+        elif category in ("IFR", "LIFR"):
+            risk = "high"
+        else:
+            risk = "unknown"
+        results.append({"airport": obs.get("airport"), "risk": risk})
+    return results
