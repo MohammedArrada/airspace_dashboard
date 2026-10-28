@@ -8,7 +8,7 @@ def normalize_aircraft(raw_data):
 
     for state in states:
         if len(state) < 10:
-            continue  # incomplete record
+            continue 
 
         callsign = state[1].strip() if state[1] else None
 
@@ -49,10 +49,6 @@ def normalize_weather(raw_data):
 
 
 #part 5: processing functions
-
-
-
-
 
 def count_airborne_aircraft(aircraft):
     return sum(1 for a in aircraft if a["on_ground"] is False)
@@ -108,3 +104,5 @@ def classify_weather_risk(weather):
             risk = "unknown"
         results.append({"airport": obs.get("airport"), "risk": risk})
     return results
+
+

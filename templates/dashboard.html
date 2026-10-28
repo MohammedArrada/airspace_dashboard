@@ -1,0 +1,88 @@
+<!-- <h1>Dashboard test</h1>
+<p>Total aircraft: {{ summary.total }}</p>
+<p>Sources: {{ sources }}</p>
+<p>Last updated: {{ last_updated }}</p>
+
+
+ -->
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Airspace Dashboard</h1>
+<p class="meta">
+    Last updated: {{ last_updated }} |
+    Retrieval time: {{ retrieval_time }} s 
+    <!-- <a href="{{ url_for('refresh') }}">Refresh</a> -->
+</p>
+
+<h2>Aircraft summary</h2>
+<div class="cards">
+    <div class="card"><h3>Total</h3><p class="big">{{ summary.total }}</p></div>
+    <div class="card"><h3>Airborne</h3><p class="big">{{ summary.airborne }}</p></div>
+    <div class="card"><h3>On ground</h3><p class="big">{{ summary.ground }}</p></div>
+    <div class="card"><h3>Missing position</h3><p class="big">{{ summary.missing_positions }}</p></div>
+</div>
+
+<div class="cards">
+    <div class="card">
+        <h3>Fastest aircraft</h3>
+        {% if summary.fastest %}
+            <p class="big">{{ summary.fastest.callsign or summary.fastest.icao24 }}</p>
+            <p>{{ summary.fastest.velocity_mps|round(1) }} m/s</p>
+        {% else %}
+            <p>No data</p>
+        {% endif %}
+    </div>
+    <div class="card">
+        <h3>Highest aircraft</h3>
+        {% if summary.highest %}
+            <p class="big">{{ summary.highest.callsign or summary.highest.icao24 }}</p>
+            <p>{{ summary.highest.altitude_meters|round(0) }} m</p>
+        {% else %}
+            <p>No data</p>
+        {% endif %}
+    </div>
+</div>
+
+<h2>Airport weather</h2>
+<div class="cards">
+    {% for obs in weather %}
+    <div class="card risk-{{ obs.risk }}">
+        <h3>{{ obs.airport }}</h3>
+        <p class="big">{{ obs.flight_category or "N/A" }}</p>
+        <p>Risk: {{ obs.risk }}</p>
+        <p>
+            {{ obs.temperature_c if obs.temperature_c is not none else "N/A" }} °C,
+            wind {{ obs.wind_speed_kt if obs.wind_speed_kt is not none else "N/A" }} kt
+        </p>
+    </div>
+    {% else %}
+    <p>No weather data available.</p>
+    {% endfor %}
+</div>
+
+<h2>Weather alerts</h2>
+{% if alert_events %}
+<ul>
+    {% for event in alert_events %}
+    <li>{{ event }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No active alerts (or the alerts source is unavailable).</p>
+{% endif %}
+
+<h2>Source health</h2>
+<table>
+    <tr><th>Source</th><th>Status</th></tr>
+    {% for name, status in sources.items() %}
+    <tr>
+        <td>{{ name }}</td>
+        <td class="status-{{ status|replace(' ', '-')|lower }}">{{ status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

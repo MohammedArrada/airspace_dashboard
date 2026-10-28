@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Aircraft{% endblock %}
+
+{% block content %}
+<h1>Aircraft details</h1>
+<p class="meta">{{ aircraft|length }} aircraft | Last updated: {{ last_updated }}</p>
+
+<table>
+    <tr>
+        <th>#</th><th>ICAO24</th><th>Callsign</th><th>Country</th>
+        <th>Latitude</th><th>Longitude</th><th>Altitude (m)</th><th>Speed (m/s)</th><th>Status</th>
+    </tr>
+    {% for a in aircraft %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ a.icao24 }}</td>
+        <td>{{ a.callsign or "N/A" }}</td>
+        <td>{{ a.country }}</td>
+        <td>{{ a.latitude if a.latitude is not none else "N/A" }}</td>
+        <td>{{ a.longitude if a.longitude is not none else "N/A" }}</td>
+        <td>{{ a.altitude_meters|round(0) if a.altitude_meters is not none else "N/A" }}</td>
+        <td>{{ a.velocity_mps|round(1) if a.velocity_mps is not none else "N/A" }}</td>
+        <td>{{ "On ground" if a.on_ground else "Airborne" }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="9">No aircraft data available.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Weather{% endblock %}
+
+{% block content %}
+<h1>Airport weather</h1>
+<p class="meta">Last updated: {{ last_updated }}</p>
+
+<table>
+    <tr>
+        <th>Airport</th><th>Observed</th><th>Temp (°C)</th><th>Wind dir</th>
+        <th>Wind (kt)</th><th>Visibility</th><th>Category</th><th>Risk</th><th>Raw METAR</th>
+    </tr>
+    {% for obs in weather %}
+    <tr class="risk-{{ obs.risk }}">
+        <td>{{ obs.airport }}</td>
+        <td>{{ obs.observed_text or "N/A" }}</td>
+        <td>{{ obs.temperature_c if obs.temperature_c is not none else "N/A" }}</td>
+        <td>{{ obs.wind_direction if obs.wind_direction is not none else "N/A" }}</td>
+        <td>{{ obs.wind_speed_kt if obs.wind_speed_kt is not none else "N/A" }}</td>
+        <td>{{ obs.visibility if obs.visibility is not none else "N/A" }}</td>
+        <td>{{ obs.flight_category or "N/A" }}</td>
+        <td>{{ obs.risk }}</td>
+        <td class="raw">{{ obs.raw_metar }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="9">No weather data available.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
