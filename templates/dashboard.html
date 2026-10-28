@@ -77,11 +77,19 @@
 
 <h2>Source health</h2>
 <table>
-    <tr><th>Source</th><th>Status</th></tr>
-    {% for name, status in sources.items() %}
     <tr>
-        <td>{{ name }}</td>
-        <td class="status-{{ status|replace(' ', '-')|lower }}">{{ status }}</td>
+        <th>Source</th><th>Available</th><th>Using cache</th>
+        <th>Message</th><th>Last updated</th>
+    </tr>
+    {% for s in source_health %}
+    <tr>
+        <td>{{ s.name }}</td>
+        <td class="{{ 'status-live' if s.available else ('status-saved-sample' if s.using_cache else 'status-failed') }}">
+            {{ "Yes" if s.available else "No" }}
+        </td> 
+        <td>{{ "Yes" if s.using_cache else "No" }}</td>
+        <td>{{ s.message }}</td>
+        <td>{{ s.last_updated or "N/A" }}</td>
     </tr>
     {% endfor %}
 </table>
