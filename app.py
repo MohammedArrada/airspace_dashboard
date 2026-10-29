@@ -134,8 +134,9 @@ def aircraft_page():
 
     status = request.args.get("status", "all")
     sort = request.args.get("sort", "")
+    search = request.args.get("search", "")
 
-    filtered = filter_aircraft(DATA["aircraft"], status, sort)
+    filtered = filter_aircraft(DATA["aircraft"], status, sort, search)
 
     context = {
         **DATA,
@@ -143,6 +144,7 @@ def aircraft_page():
         "total_count": len(DATA["aircraft"]),
         "status": status,
         "sort": sort,
+        "search": search,
     }
     return render_template("aircraft.html", **context)
 

@@ -49,7 +49,6 @@ def normalize_weather(raw_data):
 
 
 #part 5: processing functions
-
 def count_airborne_aircraft(aircraft):
     return sum(1 for a in aircraft if a["on_ground"] is False)
 
@@ -105,8 +104,14 @@ def classify_weather_risk(weather):
 
 
 
-# filtering functions (i did just airborne, ground)
-def filter_aircraft(aircraft, status="all", sort=""):
+# filtering functions 
+# /aircraft?status=airborne
+# /aircraft?status=ground
+# /aircraft?status=missing
+# /aircraft?sort=altitude
+# /aircraft?sort=speed
+# /aircraft?search=TEST
+def filter_aircraft(aircraft, status="all", sort="" ,search=""):
     result = list(aircraft)  
 
     #alphabetical sort by icao24
@@ -124,15 +129,14 @@ def filter_aircraft(aircraft, status="all", sort=""):
     elif sort == "speed":
         result = sort_aircraft(result, "velocity_mps")
 
+    search = search.strip().lower()
+    if search:
+        result = [
+            a for a in result
+            if search in (a["callsign"] or "").lower() or search in (a["icao24"] or "").lower() #to handle none values
+        ]
     return result
 
-
-# /aircraft?status=airborne
-# /aircraft?status=ground
-# /aircraft?status=missing
-# /aircraft?sort=altitude
-# /aircraft?sort=speed
-# /aircraft?search=TEST
 
 def has_missing_information(a):
     fields = ["callsign", "longitude", "latitude", "altitude_meters", "velocity_mps"]

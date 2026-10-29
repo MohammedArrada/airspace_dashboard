@@ -7,26 +7,39 @@
 <p class="meta">{{ aircraft|length }} aircraft | Last updated: {{ last_updated }}</p>
 
 
-
-<p class="filters">
+<!-- <p class="filters">
     <a href="{{ url_for('aircraft_page') }}">All</a> |
     <a href="{{ url_for('aircraft_page', status='airborne') }}">Airborne</a> |
     <a href="{{ url_for('aircraft_page', status='ground') }}">On ground</a> |
     <a style="color: rosybrown;" href="{{ url_for('aircraft_page', status='missing') }}">Missing information</a>
 
-</p>
+</p> -->
 
+<form method="get" action="{{ url_for('aircraft_page') }}" class="filters">
+    <label>Status
+        <select name="status">
+            <option value="all" {% if status == "all" %}selected{% endif %}>All</option>
+            <option value="airborne" {% if status == "airborne" %}selected{% endif %}>Airborne</option>
+            <option value="ground" {% if status == "ground" %}selected{% endif %}>On ground</option>
+            <option value="missing" {% if status == "missing" %}selected{% endif %}>Missing information</option>
+        </select>
+    </label>
 
-<form method="get" action="{{ url_for('aircraft_page') }}" class="sort-form">
-    <label for="sort">Sort by</label>
-    <select name="sort" id="sort" onchange="this.form.submit()">
-        <option value="" {% if sort == "" %}selected{% endif %}>No sorting</option>
-        <option value="altitude" {% if sort == "altitude" %}selected{% endif %}>Altitude</option>
-        <option value="speed" {% if sort == "speed" %}selected{% endif %}>Speed</option>
-    </select>
+    <label>Sort by
+        <select name="sort">
+            <option value="" {% if sort == "" %}selected{% endif %}>Alphabetical</option>
+            <option value="altitude" {% if sort == "altitude" %}selected{% endif %}>Altitude</option>
+            <option value="speed" {% if sort == "speed" %}selected{% endif %}>Speed</option>
+        </select>
+    </label>
+
+    <label>Search
+        <input type="text" name="search" value="{{ search }}" placeholder="Callsign or ICAO24">
+    </label>
+
+    <button type="submit">Apply</button>
+    <a href="{{ url_for('aircraft_page') }}">Reset</a>
 </form>
-
-
 <table>
     
     <tr>

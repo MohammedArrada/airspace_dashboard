@@ -1,21 +1,56 @@
+/* ==========================================================================
+   AIRSPACE DASHBOARD - styles.css
 
-/* ---------- Design tokens: change colors here, nowhere else ---------- */
+   Table of contents
+   1.  Design tokens (colors, radius)  <- change the look here
+   2.  Base (reset, body, headings, links, layout)
+   3.  Navigation bar
+   4.  Cards (summary cards, weather cards)
+   5.  Section colors (aircraft = blue, weather = violet)
+   6.  Risk colors (card edge, table row edge, badge)
+   7.  Tables
+   8.  Source health status colors
+   9.  Aircraft filter form (status, sort, search, buttons)
+   10. Small screens
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. DESIGN TOKENS
+   Every color in the site comes from these variables.
+   To re-theme the whole dashboard, edit only this block.
+   ========================================================================== */
 :root {
-    --bg: #0b1220;
-    --surface: #131c2e;
-    --surface-2: #1a2540;
-    --border: #243049;
-    --text: #e6edf7;
-    --muted: #7092cc;
-    --accent: #38bdf8;
-    --accent-strong: #0ea5e9;
-    --good: #34d399;
-    --warn: #fbbf24;
-    --bad: #f87171;
+    /* Surfaces */
+    --bg: #0b1220;          /* page background */
+    --surface: #131c2e;     /* cards, tables, panels */
+    --surface-2: #1a2540;   /* table headers */
+    --border: #243049;      /* thin lines around things */
+
+    /* Text */
+    --text: #e6edf7;        /* main text */
+    --muted: #7092cc;       /* labels, secondary text */
+
+    /* Accent colors */
+    --accent: #38bdf8;          /* aircraft section, links, primary buttons */
+    --accent-strong: #0ea5e9;   /* hover state of the accent */
+    --weather: #a78bfa;         /* weather section */
+
+    /* Status colors (used only for risk and source health) */
+    --good: #34d399;        /* green: low risk, live source */
+    --warn: #fbbf24;        /* amber: moderate risk, cached data */
+    --bad: #f87171;         /* red: high risk, failed source */
+
+    /* Shape */
     --radius: 12px;
 }
 
-/* ---------- Base ---------- */
+
+/* ==========================================================================
+   2. BASE
+   ========================================================================== */
+
+/* Make width and padding behave predictably on every element */
 * { box-sizing: border-box; }
 
 body {
@@ -26,59 +61,110 @@ body {
     line-height: 1.5;
 }
 
-h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.5px; }
+/* Page title */
+h1 {
+    margin: 0 0 4px;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+}
+
+/* Section headings: small, uppercase, muted */
 h2 {
-    font-size: 13px;
     margin: 32px 0 12px;
+    font-size: 13px;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 1.2px;
 }
 
 a { color: var(--accent); }
-main { max-width: 1100px; margin: 28px auto; padding: 0 20px 48px; }
-.meta { color: var(--muted); font-size: 14px; margin-top: 0; }
 
-/* ---------- Navigation ---------- */
+/* Centered content column */
+main {
+    max-width: 1100px;
+    margin: 28px auto;
+    padding: 0 20px 48px;
+}
+
+/* "Last updated / Retrieval time" line under the title */
+.meta {
+    margin-top: 0;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+/* Raw METAR text in the weather table */
+.raw {
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+
+/* ==========================================================================
+   3. NAVIGATION BAR
+   ========================================================================== */
 nav {
-    position: sticky;
+    position: sticky;                     /* stays at the top while scrolling */
     top: 0;
     z-index: 10;
     display: flex;
     align-items: center;
     gap: 24px;
     padding: 14px 28px;
-    background: rgba(11, 18, 32, 0.85);
-    backdrop-filter: blur(10px);
+    background: rgba(11, 18, 32, 0.85);   /* semi-transparent... */
+    backdrop-filter: blur(10px);          /* ...with a frosted-glass blur */
     border-bottom: 1px solid var(--border);
 }
-nav a { color: var(--muted); text-decoration: none; font-weight: 500; transition: color 0.15s; }
+
+nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s;
+}
 nav a:hover { color: var(--text); }
+
+/* The "Refresh data" link, styled as a button pushed to the right */
 nav a.button {
     margin-left: auto;
+    padding: 8px 16px;
     color: #04121f;
     background: var(--accent);
-    padding: 8px 16px;
     border-radius: 8px;
     font-weight: 600;
 }
-nav a.button:hover { background: var(--accent-strong); color: #04121f; }
+nav a.button:hover {
+    color: #04121f;
+    background: var(--accent-strong);
+}
 
-/* ---------- Cards ---------- */
+
+/* ==========================================================================
+   4. CARDS
+   ========================================================================== */
+
+/* Responsive grid: as many 200px+ columns as fit */
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     margin-bottom: 16px;
 }
+
 .card {
+    padding: 18px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 18px;
     transition: transform 0.15s, border-color 0.15s;
 }
-.card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+}
+
+/* Small uppercase label at the top of a card */
 .card h3 {
     margin: 0 0 8px;
     font-size: 12px;
@@ -87,123 +173,74 @@ nav a.button:hover { background: var(--accent-strong); color: #04121f; }
     text-transform: uppercase;
     letter-spacing: 1px;
 }
-.card p { margin: 4px 0; color: var(--muted); font-size: 14px; }
-.big { font-size: 30px; font-weight: 700; color: var(--text) !important; margin: 4px 0; }
 
-/* Weather risk colors (card and table row) */
-.card.risk-low { border-left: 5px solid var(--good); }
+.card p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+/* The big number or value on a card */
+.big {
+    margin: 4px 0;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text) !important;
+}
+
+
+/* ==========================================================================
+   5. SECTION COLORS
+   These come AFTER the generic card rules so they take priority.
+   Template classes used: aircraft-cards, weather-cards, h-aircraft, h-weather
+   ========================================================================== */
+
+/* ----- Aircraft section: blue ----- */
+.aircraft-cards .card {
+    border-top: 3px solid var(--accent);
+    background: linear-gradient(180deg, rgba(56, 189, 248, 0.10), var(--surface) 65%);
+}
+.aircraft-cards .card h3 { color: var(--accent); }
+.aircraft-cards .big     { color: var(--accent) !important; }
+
+/* ----- Weather section: violet ----- */
+.weather-cards .card {
+    border-top: 3px solid var(--weather);
+}
+.weather-cards .card h3 { color: var(--weather); }
+
+/* ----- Heading dots ----- */
+.h-aircraft::before,
+.h-weather::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 10px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.h-aircraft::before { background: var(--accent); }
+.h-weather::before  { background: var(--weather); }
+
+
+/* ==========================================================================
+   6. RISK COLORS
+   The template prints a class such as "risk-low" from the value that
+   Python calculated, and these rules turn it into a color.
+   ========================================================================== */
+
+/* ----- Left edge of a weather card ----- */
+.card.risk-low      { border-left: 5px solid var(--good); }
 .card.risk-moderate { border-left: 5px solid var(--warn); }
-.card.risk-high { border-left: 5px solid var(--bad); }
-tr.risk-low td:first-child { border-left: 4px solid var(--good); }
+.card.risk-high     { border-left: 5px solid var(--bad); }
+
+/* ----- Left edge of a weather table row ----- */
+tr.risk-low td:first-child      { border-left: 4px solid var(--good); }
 tr.risk-moderate td:first-child { border-left: 4px solid var(--warn); }
-tr.risk-high td:first-child { border-left: 4px solid var(--bad); }
+tr.risk-high td:first-child     { border-left: 4px solid var(--bad); }
 
-/* ---------- Tables ---------- */
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-}
-th, td {
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 14px;
-    border-bottom: 1px solid var(--border);
-}
-th {
-    background: var(--surface-2);
-    color: var(--muted);
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-}
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(56, 189, 248, 0.06); }
-.raw { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; color: var(--muted); }
-
-/* ---------- Source health status ---------- */
-.status-live { color: var(--good); font-weight: 600; }
-.status-saved-sample { color: var(--warn); font-weight: 600; }
-.status-failed { color: var(--bad); font-weight: 600; }
-
-/* ---------- Filters (aircraft page) ---------- */
-.filters { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
-.filters a { text-decoration: none; padding: 6px 12px; border-radius: 8px; color: var(--muted); }
-.filters a.active { background: var(--surface-2); color: var(--accent); font-weight: 600; }
-.filters label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); }
-.filters select, .filters input {
-    margin-top: 4px;
-    padding: 8px 10px;
-    background: var(--surface);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
-}
-.filters select:focus, .filters input:focus { outline: 2px solid var(--accent); border-color: transparent; }
-.filters button {
-    padding: 9px 16px;
-    background: var(--accent);
-    color: #04121f;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-}
-.filters button:hover { background: var(--accent-strong); }
-
-/* ---------- Small screens ---------- */
-@media (max-width: 700px) {
-    nav { gap: 14px; padding: 12px 16px; flex-wrap: wrap; }
-    h1 { font-size: 22px; }
-    th, td { padding: 8px 10px; }
-}
-
-/* ---------- Sort form (aircraft page) ---------- */
-.sort-form {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin: 12px 0;
-}
-
-.sort-form label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.sort-form select {
-    appearance: none;
-    -webkit-appearance: none;
-    padding: 9px 36px 9px 14px;
-    font-size: 14px;
-    color: var(--text);
-    background-color: var(--surface);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238b9ab3' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: border-color 0.15s;
-}
-
-.sort-form select:hover { border-color: var(--accent); }
-.sort-form select:focus { outline: 2px solid var(--accent); border-color: transparent; }
-
-.sort-form select option {
-    background: var(--surface);
-    color: var(--text);
-}
-
-/*-------------- Risk badges -------------------*/
+/* ----- Pill-shaped badge containing the risk word ----- */
 .badge {
     display: inline-block;
     padding: 3px 12px;
@@ -219,31 +256,177 @@ tr:hover td { background: rgba(56, 189, 248, 0.06); }
 .badge.risk-unknown  { background: rgba(139, 154, 179, 0.15); color: var(--muted); }
 
 
-
-/* ---------- Aircraft section: blue ---------- */
-.aircraft-cards .card {
-    border-top: 3px solid var(--accent);
-    background: linear-gradient(180deg, rgba(56, 189, 248, 0.10), var(--surface) 65%);
+/* ==========================================================================
+   7. TABLES
+   Used by the aircraft list, weather list, and source health.
+   ========================================================================== */
+table {
+    width: 100%;
+    border-collapse: separate;   /* needed so rounded corners work */
+    border-spacing: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;            /* clips the corners */
 }
-.aircraft-cards .card h3 { color: var(--accent); }
-.aircraft-cards .big { color: var(--accent) !important; }
 
-/* ---------- Weather section: violet (risk colors stay on the left edge and badge) ---------- */
-.weather-cards .card {
-    border-top: 3px solid var(--weather);
+th,
+td {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
 }
-.weather-cards .card h3 { color: var(--weather); }
 
-/* ---------- Section headings with a colored dot ---------- */
-.h-aircraft::before,
-.h-weather::before {
-    content: "";
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin-right: 10px;
-    border-radius: 50%;
-    vertical-align: middle;
+th {
+    background: var(--surface-2);
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
 }
-.h-aircraft::before { background: var(--accent); }
-.h-weather::before  { background: var(--weather); }
+
+tr:last-child td { border-bottom: none; }    /* no line under the last row */
+tr:hover td { background: rgba(56, 189, 248, 0.06); }
+
+
+/* ==========================================================================
+   8. SOURCE HEALTH STATUS
+   Green = live, amber = cached sample, red = failed.
+   ========================================================================== */
+.status-live         { color: var(--good); font-weight: 600; }
+.status-saved-sample { color: var(--warn); font-weight: 600; }
+.status-failed       { color: var(--bad);  font-weight: 600; }
+
+
+/* ==========================================================================
+   9. AIRCRAFT FILTER FORM
+   One form (class="filters") holds Status, Sort by, Search, Apply, Reset.
+   Each label sits above its field, and all fields share one row.
+   ========================================================================== */
+
+/* The panel around the whole form */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;     /* keeps buttons level with the fields */
+    gap: 14px;
+    margin: 16px 0 20px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+/* Label text above each field */
+.filters label {
+    display: flex;
+    flex-direction: column;    /* label text on top, field below */
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Search box and dropdowns share the same look */
+.filters input[type="text"],
+.filters select {
+    padding: 9px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: none;      /* stop the label's uppercase from leaking in */
+    letter-spacing: normal;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.filters input[type="text"] { min-width: 240px; }
+.filters input::placeholder { color: var(--muted); opacity: 0.7; }
+
+/* Dropdowns: replace the browser's arrow with our own */
+.filters select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 36px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238b9ab3' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+.filters select option {
+    background: var(--surface);
+    color: var(--text);
+}
+
+/* Hover and keyboard focus */
+.filters input:hover,
+.filters select:hover { border-color: var(--accent); }
+
+.filters input:focus,
+.filters select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);   /* soft blue glow */
+}
+
+/* "Apply" button: the main action */
+.filters button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #04121f;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+.filters button:hover  { background: var(--accent-strong); }
+.filters button:active { transform: translateY(1px); }
+
+/* "Reset" link: a quiet outlined button */
+.filters a {
+    padding: 9px 16px;
+    font-size: 14px;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: color 0.15s, border-color 0.15s;
+}
+.filters a:hover {
+    color: var(--text);
+    border-color: var(--muted);
+}
+
+
+/* ==========================================================================
+   10. SMALL SCREENS (phones and narrow windows)
+   ========================================================================== */
+@media (max-width: 700px) {
+    nav {
+        flex-wrap: wrap;
+        gap: 14px;
+        padding: 12px 16px;
+    }
+
+    h1 { font-size: 22px; }
+
+    th,
+    td { padding: 8px 10px; }
+
+    /* Stack the filter form vertically */
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filters input[type="text"] {
+        width: 100%;
+        min-width: 0;
+    }
+}
