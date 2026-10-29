@@ -11,16 +11,18 @@
 <p class="filters">
     <a href="{{ url_for('aircraft_page') }}">All</a> |
     <a href="{{ url_for('aircraft_page', status='airborne') }}">Airborne</a> |
-    <a href="{{ url_for('aircraft_page', status='ground') }}">On ground</a>
+    <a href="{{ url_for('aircraft_page', status='ground') }}">On ground</a> |
+    <a style="color: rosybrown;" href="{{ url_for('aircraft_page', status='missing') }}">Missing information</a>
+
 </p>
 
 
-<form method="get" action="{{ url_for('aircraft_page') }}">
-    <select name="sort" onchange="this.form.submit()">
+<form method="get" action="{{ url_for('aircraft_page') }}" class="sort-form">
+    <label for="sort">Sort by</label>
+    <select name="sort" id="sort" onchange="this.form.submit()">
         <option value="" {% if sort == "" %}selected{% endif %}>No sorting</option>
         <option value="altitude" {% if sort == "altitude" %}selected{% endif %}>Altitude</option>
         <option value="speed" {% if sort == "speed" %}selected{% endif %}>Speed</option>
-        <option value="missing" {% if status == "missing" %}selected{% endif %}>Missing information</option>
     </select>
 </form>
 

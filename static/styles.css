@@ -1,23 +1,249 @@
-body { font-family: Arial, sans-serif; margin: 0; background: #f4f6f8; color: #222;background-color: pink !important; } /* This sets the background color of the whole page */
-nav { background: #1f3a5f; padding: 12px 24px; display: flex; gap: 20px; align-items: center; }
-nav a { color: white; text-decoration: none; }
-nav a.button { margin-left: auto; background: #3b82f6; padding: 6px 12px; border-radius: 4px; }
-main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
-.meta { color: #666; }
-.cards { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
-.card { background: white; border-radius: 8px; padding: 16px; min-width: 180px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
-.card h3 { margin: 0 0 8px; font-size: 14px; color: #555; }
-.big { font-size: 28px; font-weight: bold; margin: 4px 0; }
-table { border-collapse: collapse; width: 100%; background: white; }
-th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: left; font-size: 14px; }
-th { background: #e9edf2; }
-.raw { font-family: monospace; font-size: 12px; }
-.risk-low { border-left: 6px solid #22c55e; }
-.risk-moderate { border-left: 6px solid #f59e0b; }
-.risk-high { border-left: 6px solid #ef4444; }
+
+/* ---------- Design tokens: change colors here, nowhere else ---------- */
+:root {
+    --bg: #0b1220;
+    --surface: #131c2e;
+    --surface-2: #1a2540;
+    --border: #243049;
+    --text: #e6edf7;
+    --muted: #7092cc;
+    --accent: #38bdf8;
+    --accent-strong: #0ea5e9;
+    --good: #34d399;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --radius: 12px;
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Inter, "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.5px; }
+h2 {
+    font-size: 13px;
+    margin: 32px 0 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+a { color: var(--accent); }
+main { max-width: 1100px; margin: 28px auto; padding: 0 20px 48px; }
+.meta { color: var(--muted); font-size: 14px; margin-top: 0; }
+
+/* ---------- Navigation ---------- */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 14px 28px;
+    background: rgba(11, 18, 32, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+}
+nav a { color: var(--muted); text-decoration: none; font-weight: 500; transition: color 0.15s; }
+nav a:hover { color: var(--text); }
+nav a.button {
+    margin-left: auto;
+    color: #04121f;
+    background: var(--accent);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+nav a.button:hover { background: var(--accent-strong); color: #04121f; }
+
+/* ---------- Cards ---------- */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    transition: transform 0.15s, border-color 0.15s;
+}
+.card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.card h3 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.card p { margin: 4px 0; color: var(--muted); font-size: 14px; }
+.big { font-size: 30px; font-weight: 700; color: var(--text) !important; margin: 4px 0; }
+
+/* Weather risk colors (card and table row) */
+.card.risk-low { border-left: 5px solid var(--good); }
+.card.risk-moderate { border-left: 5px solid var(--warn); }
+.card.risk-high { border-left: 5px solid var(--bad); }
+tr.risk-low td:first-child { border-left: 4px solid var(--good); }
+tr.risk-moderate td:first-child { border-left: 4px solid var(--warn); }
+tr.risk-high td:first-child { border-left: 4px solid var(--bad); }
+
+/* ---------- Tables ---------- */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+th, td {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+}
+th {
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(56, 189, 248, 0.06); }
+.raw { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; color: var(--muted); }
+
+/* ---------- Source health status ---------- */
+.status-live { color: var(--good); font-weight: 600; }
+.status-saved-sample { color: var(--warn); font-weight: 600; }
+.status-failed { color: var(--bad); font-weight: 600; }
+
+/* ---------- Filters (aircraft page) ---------- */
+.filters { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+.filters a { text-decoration: none; padding: 6px 12px; border-radius: 8px; color: var(--muted); }
+.filters a.active { background: var(--surface-2); color: var(--accent); font-weight: 600; }
+.filters label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); }
+.filters select, .filters input {
+    margin-top: 4px;
+    padding: 8px 10px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+}
+.filters select:focus, .filters input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+.filters button {
+    padding: 9px 16px;
+    background: var(--accent);
+    color: #04121f;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.filters button:hover { background: var(--accent-strong); }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 700px) {
+    nav { gap: 14px; padding: 12px 16px; flex-wrap: wrap; }
+    h1 { font-size: 22px; }
+    th, td { padding: 8px 10px; }
+}
+
+/* ---------- Sort form (aircraft page) ---------- */
+.sort-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.sort-form label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sort-form select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 9px 36px 9px 14px;
+    font-size: 14px;
+    color: var(--text);
+    background-color: var(--surface);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238b9ab3' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.sort-form select:hover { border-color: var(--accent); }
+.sort-form select:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+.sort-form select option {
+    background: var(--surface);
+    color: var(--text);
+}
+
+/*-------------- Risk badges -------------------*/
+.badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.badge.risk-low      { background: rgba(52, 211, 153, 0.15);  color: var(--good); }
+.badge.risk-moderate { background: rgba(251, 191, 36, 0.15);  color: var(--warn); }
+.badge.risk-high     { background: rgba(248, 113, 113, 0.15); color: var(--bad); }
+.badge.risk-unknown  { background: rgba(139, 154, 179, 0.15); color: var(--muted); }
 
 
-/* for the status of the data source */
-.status-live { color: #15803d; font-weight: bold; }
-.status-saved-sample { color: #b45309; font-weight: bold; }
-.status-failed { color: #b91c1c; font-weight: bold; }
+
+/* ---------- Aircraft section: blue ---------- */
+.aircraft-cards .card {
+    border-top: 3px solid var(--accent);
+    background: linear-gradient(180deg, rgba(56, 189, 248, 0.10), var(--surface) 65%);
+}
+.aircraft-cards .card h3 { color: var(--accent); }
+.aircraft-cards .big { color: var(--accent) !important; }
+
+/* ---------- Weather section: violet (risk colors stay on the left edge and badge) ---------- */
+.weather-cards .card {
+    border-top: 3px solid var(--weather);
+}
+.weather-cards .card h3 { color: var(--weather); }
+
+/* ---------- Section headings with a colored dot ---------- */
+.h-aircraft::before,
+.h-weather::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 10px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.h-aircraft::before { background: var(--accent); }
+.h-weather::before  { background: var(--weather); }

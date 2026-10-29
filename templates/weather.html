@@ -20,8 +20,7 @@
         <td>{{ obs.wind_speed_kt if obs.wind_speed_kt is not none else "N/A" }}</td>
         <td>{{ obs.visibility if obs.visibility is not none else "N/A" }}</td>
         <td>{{ obs.flight_category or "N/A" }}</td>
-        <td>{{ obs.risk }}</td>
-        <td class="raw">{{ obs.raw_metar }}</td>
+        <td><span class="badge risk-{{ obs.risk or 'unknown' }}">{{ obs.risk or "unknown" }}</span></td>        <td class="raw">{{ obs.raw_metar }}</td>
     </tr>
     {% else %}
     <tr><td colspan="9">No weather data available.</td></tr>

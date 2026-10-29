@@ -127,7 +127,6 @@ def filter_aircraft(aircraft, status="all", sort=""):
     return result
 
 
-
 # /aircraft?status=airborne
 # /aircraft?status=ground
 # /aircraft?status=missing
