@@ -15,6 +15,9 @@ th { background: #e9edf2; }
 .risk-low { border-left: 6px solid #22c55e; }
 .risk-moderate { border-left: 6px solid #f59e0b; }
 .risk-high { border-left: 6px solid #ef4444; }
+
+
+/* for the status of the data source */
 .status-live { color: #15803d; font-weight: bold; }
 .status-saved-sample { color: #b45309; font-weight: bold; }
 .status-failed { color: #b91c1c; font-weight: bold; }

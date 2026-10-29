@@ -79,8 +79,6 @@ def find_aircraft_missing_positions(aircraft):
     ]
 
 
-
-
 '''
 VFR	Visual Flight Rules	--- Clear weather
 MVFR	Marginal VFR  ----	Fair weather
@@ -106,3 +104,43 @@ def classify_weather_risk(weather):
     return results
 
 
+
+# filtering functions (i did just airborne, ground)
+def filter_aircraft(aircraft, status="all", sort=""):
+    result = list(aircraft)  
+
+    #alphabetical sort by icao24
+    result.sort(key=lambda a: a["icao24"] or "")  
+
+    if status == "airborne":
+        result = [a for a in result if a["on_ground"] is False]
+    elif status == "ground":
+        result = [a for a in result if a["on_ground"] is True]
+    elif status == "missing":
+        result = [a for a in result if has_missing_information(a)]
+
+    if sort == "altitude":
+        result = sort_aircraft(result, "altitude_meters")
+    elif sort == "speed":
+        result = sort_aircraft(result, "velocity_mps")
+
+    return result
+
+
+
+# /aircraft?status=airborne
+# /aircraft?status=ground
+# /aircraft?status=missing
+# /aircraft?sort=altitude
+# /aircraft?sort=speed
+# /aircraft?search=TEST
+
+def has_missing_information(a):
+    fields = ["callsign", "longitude", "latitude", "altitude_meters", "velocity_mps"]
+    return any(a[field] is None for field in fields)
+
+def sort_aircraft(aircraft, key):
+    with_value = [a for a in aircraft if a[key] is not None]
+    without_value = [a for a in aircraft if a[key] is None]
+    with_value.sort(key=lambda a: a[key], reverse=True)
+    return with_value + without_value

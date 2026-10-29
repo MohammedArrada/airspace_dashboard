@@ -3,6 +3,7 @@ from services.aircraft_service import fetch_aircraft
 from services.weather_service import fetch_weather
 from services.alert_service import fetch_alerts
 
+
 for name, func in [("aircraft", fetch_aircraft), ("weather", fetch_weather), ("alerts", fetch_alerts)]:
     data = func()
     if data is None:

@@ -2,8 +2,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from time import perf_counter
-
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, redirect, render_template, url_for ,request
 
 from services.cache_service import load_sample
 from services.aircraft_service import fetch_aircraft
@@ -13,7 +12,7 @@ from services.data_processing import (
     normalize_aircraft, normalize_weather,
     count_airborne_aircraft, count_ground_aircraft,
     find_fastest_aircraft, find_highest_aircraft,
-    find_aircraft_missing_positions, classify_weather_risk,
+    find_aircraft_missing_positions, classify_weather_risk, filter_aircraft
 )
 
 app = Flask(__name__)
@@ -124,10 +123,28 @@ def dashboard():
     return render_template("dashboard.html", **DATA)
 
 
+# @app.route("/aircraft")
+# def aircraft_page():
+#     ensure_data()
+#     return render_template("aircraft.html", **DATA)
+
 @app.route("/aircraft")
 def aircraft_page():
     ensure_data()
-    return render_template("aircraft.html", **DATA)
+
+    status = request.args.get("status", "all")
+    sort = request.args.get("sort", "")
+
+    filtered = filter_aircraft(DATA["aircraft"], status, sort)
+
+    context = {
+        **DATA,
+        "aircraft": filtered,
+        "total_count": len(DATA["aircraft"]),
+        "status": status,
+        "sort": sort,
+    }
+    return render_template("aircraft.html", **context)
 
 
 @app.route("/weather")
